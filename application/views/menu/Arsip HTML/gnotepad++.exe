@@ -1,0 +1,184 @@
+	<div class="span9" id="content">	
+	<?php
+		$id = $this->uri->segment(3);
+		if ($id=="ok"){
+	?>
+		<div class="alert alert-success">
+			<button class="close" data-dismiss="alert">&times;</button>
+			<strong>Success!</strong> Input Marking Sheet Medical Check Up
+		</div>
+	<?php
+		} else if ($id=="change") {
+	?>
+		<div class="alert alert-success">
+			<button class="close" data-dismiss="alert">&times;</button>
+			<strong>Success!</strong> Update Marking Sheet Medical Check Up
+	    </div>
+	<?php
+		} else if ($id=="del") {
+	?>
+		<div class="alert alert-success">
+			<button class="close" data-dismiss="alert">&times;</button>
+			<strong>Success!</strong> Delete User
+		</div>
+	<?php
+		}
+	?>		
+	<script>
+	  function undisableTxt(){
+		document.getElementById("myText123").disabled = false;
+	  }
+	  
+	  function goBack(){
+	  	window.history.back();
+	  }
+	  
+	  function popup(b_id){
+        window.open("<?php echo base_url();?>patient/find_patient_mark","Popup","height=700,width=525,scrollbars=1,"+ 
+                        "directories=1,location=1,menubar=1," + 
+                         "resizable=1 status=1,history=1 top = 50 left = 100");
+      }
+	  
+	  function popup_edit(b_id){
+        window.open("<?php echo base_url();?>patient/find_patient_mark","Popup","height=700,width=525,scrollbars=1,"+ 
+                        "directories=1,location=1,menubar=1," + 
+                         "resizable=1 status=1,history=1 top = 50 left = 100");
+      }
+	  
+	  function btntest_onclick(){
+		window.location.href = "<?php echo base_url();?>patient/quesioner_patient_mcu/edit";
+	  }
+	</script>
+                    <!-- morris stacked chart -->
+                    <div class="row-fluid">
+                        <!-- block --> 
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+                            <div class="muted pull-left">Form Marking Sheet Medical Check Up</div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="span12">           
+                                    <fieldset>
+                                        <legend>	
+										<?php
+										if ($id=="edit") {
+										?>
+										<font color="red">Edit Data</font>
+										<?php
+											}
+										?> Marking Sheet
+										</legend>
+										<form class="form-horizontal" action="<?php echo base_url();?>patient/mark_sheet_mcu_act" method="post" name="mark_mcu">
+										
+                                        <div class="control-group">
+                                          <label class="control-label" for="focusedInput">Patient MRN</label>
+                                          <div class="controls">
+                                            <input class="input-xlarge focused" name="pat_mrn" type="text" value="<?=$_POST['pat_mrn'];?>" id="" readonly autocomplete="off" placeholder=" ... ">
+											<input name="id_reg" type="hidden" id=""  autocomplete="off" >
+											<input name="id_up" type="hidden" id=""  autocomplete="off" >
+                                          </div>
+                                        </div>
+										
+										<div class="control-group">
+                                          <label class="control-label" for="focusedInput">Patient Name</label>
+                                          <div class="controls">
+                                            <input class="input-xlarge focused" name="pat_name" type="text" id="myText02" value="<?=$_POST['pat_name'];?>" readonly autocomplete="off" required>
+											&nbsp; Birth Date & Place &nbsp;<input class="input-xlarge focused" name="pat_dob" value="<?=$_POST['pat_dob'];?>" type="text" id="" readonly autocomplete="off" required>
+                                          </div>
+                                        </div>
+										
+										<div class="control-group">
+                                          <label class="control-label" for="focusedInput">Age</label>
+                                          <div class="controls">
+											<input class="input-xlarge focused" name="age" type="text" id="" value="<?=$_POST['age'];?>" readonly autocomplete="off" required> 	
+											&nbsp; Marital Status &nbsp; &nbsp; &nbsp; &nbsp; <input class="input-xlarge focused" name="pat_status" value="<?=$_POST['pat_status'];?>"  type="text" id="" readonly autocomplete="off" required>
+                                          </div>
+                                        </div>		
+										
+										<div class="control-group">
+                                          <label class="control-label" for="focusedInput">Address</label>
+                                          <div class="controls">
+                                            <input class="input-xlarge focused" name="pat_address" type="text" value="<?=$_POST['pat_address'];?>"  id="myText05" readonly autocomplete="off" required>				
+                                          </div>
+                                        </div>
+										
+										<div class="control-group">
+                                          <label class="control-label" for="focusedInput">Telephone</label>
+                                          <div class="controls">
+                                            <input class="input-xlarge focused" name="pat_telp" type="text" value="<?=$_POST['pat_telp'];?>" id="myText07" readonly autocomplete="off" required>
+                                          </div>
+                                        </div>	
+										
+										<div class="row-fluid">
+											<!-- block -->
+											<div class="block" style="width: 50%; float: left;">
+												<div class="navbar navbar-inner block-header">
+													<div class="muted pull-left"><b>Marking Sheet For Medical Check Up</b></div>
+												</div>
+												<div class="block-content collapse in">
+													<div class="span12">
+														<table class="table table-hover">
+															<thead>
+																<tr>
+																	<th>Contents</th>
+																	<th>Result</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td>Blood Pressure</td>
+																	<td>High <input type="text" style="width: 65px;" size="6" name="hgh"> Low <input type="text" style="width: 65px;" size="6" name="hgh"></td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											
+											<div class="block" style="width: 45%; float: right;">
+												<div class="navbar navbar-inner block-header">
+													<div class="muted pull-left"><b>Marking Sheet For Medical Check Up</b></div>
+												</div>
+												<div class="block-content collapse in">
+													<div class="span12">
+														<table class="table table-hover">
+															<thead>
+																<tr>
+																	<th>Contents</th>
+																	<th>Check</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td></td>
+																	<td><input type="checkbox" name="aya" value="1" required></td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<!-- /block -->
+										</div>
+
+										
+										<div class="form-actions">
+										<button type="submit" class="btn btn-success"><i class="icon-check"></i> Search ... </button>
+                                        </div>
+										<legend></legend>
+										</form>
+									</fieldset>     
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /block -->
+                    </div>
+                </div>
+		<!--/.fluid-container-->
+        <script src="<?php echo base_url();?>design/vendors/jquery-1.9.1.js"></script>
+        <script src="<?php echo base_url();?>design/bootstrap/js/bootstrap.min.js"></script>
+        <script src="<?php echo base_url();?>design/vendors/datatables/js/jquery.dataTables.min.js"></script>
+		<link href="<?php echo base_url();?>design/assets/DT_bootstrap.css" rel="stylesheet" media="screen">
+        <script src="<?php echo base_url();?>design/assets/scripts.js"></script>
+        <script src="<?php echo base_url();?>design/assets/DT_bootstrap.js"></script>
+</html>

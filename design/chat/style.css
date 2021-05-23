@@ -1,0 +1,12 @@
+
+#page-wrap                      { width: 100px; margin: 30px auto; position: relative; }
+#chat-wrap                      { border: 1px solid #eee; margin: 0 0 15px 0; }
+#chat-area                      { outline: 2px dotted; height: 175px; overflow: auto; padding: 16px; background: white; border-radius: 9px; font: 12px "Lucida Grande", Sans-Serif;}
+#chat-area span                 { color: #F5F5F5; background: #08c; padding: 4px 8px; -moz-border-radius: 5px; -webkit-border-radius: 8px; margin: 0 5px 0 0; }
+#chat-area p                    { padding: 8px 0; border-bottom: 1px solid #ccc; }
+
+#name-area                      { position: absolute; top: 12px; right: 0; color: white; font: bold 12px "Lucida Grande", Sans-Serif; text-align: right; }   
+#name-area span                 { color: #fa9f00; }
+
+#send-message-area p            { float: left; color: black; padding-top: 0px; padding: 10px;font-size: 9px; }
+#sendie                         { border: 3px solid #999; width: 360px; padding: 10px; font: 12px "Lucida Grande", Sans-Serif; float: right; }
