@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://persadagm.com/ci';
+$config['base_url'] = 'http://localhost/klinik/';
 // $config['base_url'] = 'http://10.17.44.43/ci';
 
 /*
@@ -47,7 +47,7 @@ $config['index_page'] = '';
 |
 | WARNING: If you set this to 'PATH_INFO', URIs will always be URL-decoded!
 */
-$config['uri_protocol']	= 'REQUEST_URI';
+$config['uri_protocol']    = 'REQUEST_URI';
 
 /*
 |--------------------------------------------------------------------------
@@ -72,7 +72,7 @@ $config['url_suffix'] = '';
 | than english.
 |
 */
-$config['language']	= 'english';
+$config['language']    = 'english';
 
 /*
 |--------------------------------------------------------------------------
@@ -359,7 +359,7 @@ $config['encryption_key'] = '';
 $config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = 'ci_sessions';
 $config['sess_expiration'] = 0;
-$config['sess_save_path'] = 'ci_sessions';//its your table name name
+$config['sess_save_path'] = 'ci_sessions'; //its your table name name
 $config['sess_match_ip'] = TRUE;
 $config['sess_expire_on_close'] = TRUE;
 $config['sess_time_to_update'] = 0;
@@ -380,11 +380,11 @@ $config['sess_match_useragent']   = TRUE;
 |       'cookie_httponly') will also affect sessions.
 |
 */
-$config['cookie_prefix']	= '';
-$config['cookie_domain']	= '';
-$config['cookie_path']		= '/';
-$config['cookie_secure']	= FALSE;
-$config['cookie_httponly'] 	= FALSE;
+$config['cookie_prefix']    = '';
+$config['cookie_domain']    = '';
+$config['cookie_path']        = '/';
+$config['cookie_secure']    = FALSE;
+$config['cookie_httponly']     = FALSE;
 
 /*
 |--------------------------------------------------------------------------

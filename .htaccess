@@ -1,8 +1,10 @@
-RewriteEngine On
-RewriteBase /ci
+RewriteEngine on
+RewriteCond $1 !^(index\.php)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /ci/index.php?/$1 [L]
-RewriteCond %{HTTP_HOST} ^magista\.persadagm\.com$
-RewriteRule ^/?$ "http\:\/\/persadagm\.com\/ci" [R=301,L]
+RewriteRule ^(.*)$ index.php/$1 [L,QSA] 
 
+<FilesMatch \.php> 
+    # Apache 2.4.10+ can proxy to unix socket 
+    SetHandler "proxy:unix:/var/run/php/php5.6-fpm.sock|fcgi://localhost/" 
+</FilesMatch>
