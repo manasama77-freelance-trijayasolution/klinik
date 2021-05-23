@@ -1,8 +1,0 @@
-RewriteEngine On
-RewriteBase /ci
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /ci/index.php?/$1 [L]
-RewriteCond %{HTTP_HOST} ^magista\.persadagm\.com$
-RewriteRule ^/?$ "http\:\/\/persadagm\.com\/ci" [R=301,L]
-
