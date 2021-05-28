@@ -3709,7 +3709,7 @@ class Patient extends CI_Controller
 			$id_number         = $this->input->post('id_number');
 			$id_number_type    = $this->input->post('id_number_type');
 			$id_medical_record = $this->input->post('id_medical_record');
-			$patient_name      = $this->input->post('patient_name');
+			$patient_name      = strtoupper($this->input->post('patient_name'));
 			$patient_title     = $this->input->post('patient_title');
 			$gender            = $this->input->post('gender');
 			$pob               = $this->input->post('pob');
@@ -3718,7 +3718,7 @@ class Patient extends CI_Controller
 			$religion          = $this->input->post('religion');
 			$job               = $this->input->post('job');
 			$mobile_phone      = $this->input->post('mobile_phone');
-			$relative_name     = $this->input->post('relative_name');
+			$relative_name     = strtoupper($this->input->post('relative_name'));
 			$relative_phone    = $this->input->post('relative_phone');
 
 			$data = [

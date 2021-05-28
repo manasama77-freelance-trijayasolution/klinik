@@ -8,25 +8,32 @@ class M_regreport extends CI_Model
 		$this->db->from('trx_registration');
 		$this->db->join('pat_data', 'trx_registration.id_pat = pat_data.id_pat ', 'left');
 		$this->db->join('mst_client', 'trx_registration.id_client = mst_client.id_Client ', 'left');
-		$this->db->order_by("id_reg", "desc");
+		$this->db->order_by("trx_registration.reg_date", "desc");
 		/* 	$this->db->limit(0,5); */
 		$this->db->limit(1000);
 		$query = $this->db->get();
 		return $query;
 	}
 
-	function report_reg_as_id($id_reg1, $id_reg2)
+	public function report_reg_as_id($id_reg1 = null, $id_reg2 = null)
 	{
-		$this->db->select('trx_registration.id_reg,trx_registration.reg_date,pat_data.pat_name,pat_data.pat_MRN,mst_client.client_name,id_service');
+		$this->db->select('
+			trx_registration.id_reg,
+			trx_registration.reg_date,
+			pat_data.pat_name,
+			pat_data.pat_MRN,
+			mst_client.client_name,
+			id_service
+		');
 		$this->db->from('trx_registration');
 		$this->db->join('pat_data', 'trx_registration.id_pat = pat_data.id_pat ', 'left');
 		$this->db->join('mst_client', 'trx_registration.id_client = mst_client.id_Client ', 'left');
-		$this->db->order_by("id_reg", "desc");
-		$this->db->where("id_reg BETWEEN $id_reg1 AND $id_reg2");
-		/* 	$this->db->limit(0,5); */
+		if ($id_reg1 != null && $id_reg2 != null) {
+			$this->db->where("id_reg BETWEEN $id_reg1 AND $id_reg2", NULL, TRUE);
+		}
+
+		$this->db->order_by("trx_registration.reg_date", "desc");
 		$query = $this->db->get();
-		//	$this->db->limit(1000);
-		//	$this->db->where('id_reg', $id_reg1);
 		return $query;
 	}
 
@@ -41,15 +48,73 @@ class M_regreport extends CI_Model
 		return $query;
 	}
 
-	function report_profit_as_date($datereg1, $datereg2)
+	public function report_expense_as_date_adam($datereg1, $datereg2)
 	{
-		$query = $this->db->query("SELECT * FROM ( SELECT `trx_registration`.`id_reg` AS id_trx, `trx_registration`.`reg_date` AS tgl, `serv_name` AS item_in, '-' AS item_out, `mst_service_price`.`Price`, '-' AS ket FROM `trx_registration` LEFT JOIN `pat_data` ON `trx_registration`.`id_pat` = `pat_data`.`id_pat` LEFT JOIN `mst_client` ON `trx_registration`.`id_client` = `mst_client`.`id_Client` LEFT JOIN `pat_order_h` ON `pat_order_h`.`id_reg` = `trx_registration`.`id_reg` LEFT JOIN `pat_order_d` ON `pat_order_d`.`id_order_header` = `pat_order_h`.`id_order` LEFT JOIN `mst_services` ON `mst_services`.`id_service` = `pat_order_d`.`id_service` LEFT JOIN `mst_service_price` ON `mst_services`.`id_service` = `mst_service_price`.`id_service` WHERE mst_service_price.price_type=2 AND SUBSTRING( trx_registration.reg_date, 1, 10 ) BETWEEN '$datereg1' AND '$datereg2' UNION ALL SELECT `trx_item_po_d`.`id_item_po_d`, `trx_item_po_h`.`created_date`, '-' AS item_in, `trx_item_po_d`.`item_id`, `trx_item_po_d`.`item_amount`, '-' AS ket FROM `trx_item_po_h` INNER JOIN `trx_item_po_d` ON `trx_item_po_h`.`id_po` = `trx_item_po_d`.`id_po_header` WHERE SUBSTRING( trx_item_po_h.created_date, 1, 10 ) BETWEEN '$datereg1' AND '$datereg2' ) A ORDER BY tgl");
+		$this->db->select('trx_item_po_h.id_po, trx_item_po_d.id_item_po_d, trx_item_po_h.created_date, trx_item_po_d.item_id, trx_item_po_d.item_qty, trx_item_po_h.supplier_id, trx_item_po_d.item_amount');
+		$this->db->from('trx_item_po_h');
+		$this->db->join('trx_item_po_d', 'trx_item_po_h.id_po=trx_item_po_d.id_po_header', 'left');
+		$this->db->order_by('trx_item_po_h.created_date', 'desc');
+		$this->db->where("trx_item_po_h.created_date BETWEEN '$datereg1' AND '$datereg2'");
+		$query = $this->db->get();
 		return $query;
 	}
 
-	function report_reg_as_date($datereg1, $datereg2)
+	function report_profit_as_date($datereg1, $datereg2)
 	{
-		$this->db->select('trx_registration.id_reg, trx_registration.reg_date,pat_data.pat_name, pat_data.pat_MRN, mst_client.client_name, mst_services.id_service, serv_name, mst_service_price.Price');
+		$query = $this->db->query("SELECT * FROM 
+			( 
+				SELECT 
+					`trx_registration`.`id_reg` AS id_trx, 
+					`trx_registration`.`reg_date` AS tgl, 
+					`serv_name` AS item_in, 
+					'-' AS item_out, 
+					`mst_service_price`.`Price`, 
+					'-' AS ket,
+					IF(`trx_pat_payment_d`.`type_payment` = 0, 'Cash',
+						IF(`trx_pat_payment_d`.`type_payment` = 1, 'Credit Card',
+							IF(`trx_pat_payment_d`.`type_payment` = 5, 'Debit Card', '-')
+						)
+					) AS type_payment
+				FROM `trx_registration` 
+				LEFT JOIN `pat_data` ON `trx_registration`.`id_pat` = `pat_data`.`id_pat` 
+				LEFT JOIN `mst_client` ON `trx_registration`.`id_client` = `mst_client`.`id_Client` 
+				LEFT JOIN `pat_order_h` ON `pat_order_h`.`id_reg` = `trx_registration`.`id_reg` 
+				LEFT JOIN `pat_order_d` ON `pat_order_d`.`id_order_header` = `pat_order_h`.`id_order` 
+				LEFT JOIN `mst_services` ON `mst_services`.`id_service` = `pat_order_d`.`id_service` 
+				LEFT JOIN `mst_service_price` ON `mst_services`.`id_service` = `mst_service_price`.`id_service` 
+				LEFT JOIN `trx_pat_payment_h` ON `trx_pat_payment_h`.`id_reg` = `trx_registration`.`id_reg`
+				LEFT JOIN `trx_pat_payment_d` ON `trx_pat_payment_d`.`id_payment_header` = `trx_pat_payment_h`.`id_payment`
+				WHERE 
+					mst_service_price.price_type = 2 
+					AND DATE(trx_registration.reg_date) BETWEEN '$datereg1' AND '$datereg2' 
+				UNION ALL 
+					SELECT 
+						`trx_item_po_d`.`id_item_po_d`, 
+						`trx_item_po_h`.`created_date`, 
+						'-' AS item_in, 
+						`trx_item_po_d`.`item_id`, 
+						`trx_item_po_d`.`item_amount`, 
+						'-' AS ket,
+						'-' AS type_payment
+					FROM `trx_item_po_h` 
+					INNER JOIN `trx_item_po_d` ON `trx_item_po_h`.`id_po` = `trx_item_po_d`.`id_po_header` 
+					WHERE DATE(trx_item_po_h.created_date) BETWEEN '$datereg1' AND '$datereg2'
+				) A ORDER BY tgl DESC");
+		return $query;
+	}
+
+	public function report_reg_as_date($datereg1 = null, $datereg2 = null)
+	{
+		$this->db->select('
+			trx_registration.id_reg, 
+			trx_registration.reg_date,
+			pat_data.pat_name, 
+			pat_data.pat_MRN, 
+			mst_client.client_name, 
+			mst_services.id_service, 
+			serv_name, 
+			mst_service_price.Price
+		');
 		$this->db->from('trx_registration');
 		$this->db->join('pat_data', 'trx_registration.id_pat = pat_data.id_pat ', 'left');
 		$this->db->join('mst_client', 'trx_registration.id_client = mst_client.id_Client ', 'left');
@@ -58,21 +123,27 @@ class M_regreport extends CI_Model
 		$this->db->join('mst_services', 'mst_services.id_service = pat_order_d.id_service ', 'left');
 		$this->db->join('mst_service_price', 'mst_services.id_service = mst_service_price.id_service ', 'left');
 		$this->db->where("mst_service_price.price_type=2");
-		$this->db->where("SUBSTRING(trx_registration.reg_date,1,10) BETWEEN '$datereg1' AND '$datereg2'");
+		if ($datereg1 != null && $datereg2 != null) {
+			$this->db->where("trx_registration.reg_date BETWEEN '$datereg1' AND '$datereg2'", null, false);
+		}
 		$this->db->order_by("id_reg", "desc");
 		$query = $this->db->get();
 		return $query;
 	}
 
 
-	function report_reg_as_date_new($datereg1, $datereg2)
+	public function report_reg_as_date_new($datereg1 = null, $datereg2 = null)
 	{
 		$this->db->select('trx_registration.id_reg,trx_registration.reg_date,pat_data.pat_name,pat_data.pat_MRN,mst_client.client_name,id_service');
 		$this->db->from('trx_registration');
 		$this->db->join('pat_data', 'trx_registration.id_pat = pat_data.id_pat ', 'left');
 		$this->db->join('mst_client', 'trx_registration.id_client = mst_client.id_Client ', 'left');
-		$this->db->where("SUBSTRING(trx_registration.reg_date,1,10) BETWEEN '$datereg1' AND '$datereg2'");
-		$this->db->order_by("id_reg", "desc");
+
+		if ($datereg1 != null && $datereg2 != null) {
+			$this->db->where("trx_registration.reg_date BETWEEN '$datereg1' AND '$datereg2'", null, false);
+		}
+
+		$this->db->order_by("trx_registration.reg_date", "desc");
 		$query = $this->db->get();
 		return $query;
 	}
@@ -191,6 +262,28 @@ From
 			->where('trx_registration.appointment_time !=', null)
 			->order_by('trx_registration.appointment_date', 'asc')
 			->order_by('trx_registration.appointment_time', 'asc')
+			->get();
+	}
+
+	public function get_list()
+	{
+		return $this->db
+			->select([
+				'trx_registration.id',
+				'trx_registration.id_reg',
+				'trx_registration.id_pat',
+				'trx_registration.create_date as reg_date',
+				'pat_data.pat_name',
+				'mst_title.title_desc',
+				'pat_data.pat_dob',
+				'mst_price_type.price_type',
+			])
+			->from('trx_registration')
+			->join('pat_data', 'pat_data.id_Pat = trx_registration.id_pat', 'left')
+			->join('mst_title', 'mst_title.id_title = pat_data.id_title', 'left')
+			->join('mst_price_type', 'mst_price_type.id_price_type = trx_registration.pat_charge_rule', 'left')
+			->where('trx_registration.status_reg', 0)
+			->order_by('trx_registration.create_date desc')
 			->get();
 	}
 }

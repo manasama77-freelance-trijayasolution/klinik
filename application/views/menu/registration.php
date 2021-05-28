@@ -516,6 +516,8 @@ mysqli_close($con);
 						timer: 1500
 					});
 				}
+
+				closeFormAddNewPatient();
 			});
 		});
 	});

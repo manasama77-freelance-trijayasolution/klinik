@@ -1,0 +1,21 @@
+ALTER TABLE `u1029257_kyoaims`.`trx_registration` 
+DROP COLUMN `appointment_date`,
+ADD COLUMN `appointment_date` date NULL AFTER `reg_date`,
+ADD COLUMN `appointment_time` time NULL AFTER `appointment_date`;
+
+CREATE TABLE `u1029257_kyoaims`.`order_services`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_registration` varchar(255) NULL,
+  `id_patient` int UNSIGNED NULL,
+  `id_service` int UNSIGNED NULL,
+  `is_complete` enum('yes','no') NULL,
+  PRIMARY KEY (`id`)
+);
+
+ALTER TABLE `u1029257_kyoaims`.`mst_odo` 
+CHANGE COLUMN `odo_value` `id_patient` int UNSIGNED NULL DEFAULT NULL AFTER `id_reg`,
+ADD COLUMN `odo_value` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL AFTER `id_patient`;
+
+ALTER TABLE `u1029257_kyoaims`.`mst_odo` 
+CHANGE COLUMN `odo_value` `odo_desc` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL AFTER `id_patient`,
+ADD COLUMN `odo_value` int UNSIGNED NULL AFTER `id_patient`;

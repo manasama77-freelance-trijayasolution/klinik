@@ -3,9 +3,10 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Registration extends CI_Controller
 {
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('m_patient');
 	}
 
 	function index()
@@ -21,9 +22,8 @@ class Registration extends CI_Controller
 		}
 	}
 
-	function reg_patien()
+	public function reg_patien()
 	{
-		$this->load->model('m_patient');
 
 		if ($this->session->userdata('logged_in')) {
 			$session_data                  = $this->session->userdata('logged_in');

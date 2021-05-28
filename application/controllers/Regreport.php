@@ -3,13 +3,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Regreport extends CI_Controller
 {
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('m_regreport');
+		$this->load->model('m_registration');
 	}
-	/*  	var $limit = 10;
-	var $reg = 'reg_patien';
-  */
+
 	function index()
 	{
 		if ($this->session->userdata('logged_in')) {
@@ -23,41 +23,34 @@ class Regreport extends CI_Controller
 	}
 
 
-	function reg_report()
+	public function reg_report()
 	{
-		$session_data = $this->session->userdata('logged_in');
-		$data['username'] = $session_data['username'];
-		//----- condition where value of id_reg or date of registration not null-----//
-		$act      = $this->input->post('act');
-		$id_reg1  = $this->input->post('id_reg1');
-		$id_reg2  = $this->input->post('id_reg2');
-		$datereg1 = date("Y-m-d", strtotime($this->input->post('datereg1')));
-		$datereg2 = date("Y-m-d", strtotime($this->input->post('datereg2')));
-		//echo $act;
-		if ($act == "View") {
-			if (!empty($id_reg1) && !empty($id_reg2)) {
+		if ($this->session->userdata('logged_in')) {
+			$session_data     = $this->session->userdata('logged_in');
+			$data['username'] = $session_data['username'];
+			$act              = $this->input->post('act');
+			$id_reg1          = $this->input->post('id_reg1');
+			$id_reg2          = $this->input->post('id_reg2');
+			$datereg1         = ($this->input->post('datereg1')) ? $this->input->post('datereg1') : date('Y-m-d');
+			$datereg2         = ($this->input->post('datereg2')) ? $this->input->post('datereg2') : date('Y-m-d');
 
-				$this->load->model('m_regreport'); // load ke model m_registration mst_charge_rule
-				$data['trx_registration'] = $this->m_regreport->report_reg_as_id($id_reg1, $id_reg2); // 		
-				$this->template->set('title', 'Klinik | Registration Report');
-				$this->template->load('template', 'menu/reg_report', $data);
-			} elseif (!empty($datereg1) && !empty($datereg2)) {
+			if ($act == "View") {
+				if (!empty($id_reg1) && !empty($id_reg2)) {
+					$data['trx_registration'] = $this->m_regreport->report_reg_as_id($id_reg1, $id_reg2);
+				} elseif (!empty($datereg1) && !empty($datereg2)) {
+					$data['trx_registration'] = $this->m_regreport->report_reg_as_date_new($datereg1, $datereg2); // 		
+				}
+			} else {
+				if ($act == "Print") {
+					echo "<script> window.open('print_reg/$datereg1/$datereg2', '', 'width=700, height=600, top=25, left=350');</script>";
+				}
 
-				$this->load->model('m_regreport'); // load ke model m_registration mst_charge_rule
-				$data['trx_registration'] = $this->m_regreport->report_reg_as_date_new($datereg1, $datereg2); // 		
-				$this->template->set('title', 'Klinik | Registration Report');
-				$this->template->load('template', 'menu/reg_report', $data);
+				$data['trx_registration'] = $this->m_regreport->get_report_reg();
 			}
-		} elseif ($act == "Print") {
-			//echo "Print ieu teh";
-			echo "<script> window.open('print_reg/$datereg1/$datereg2', '', 'width=700, height=600, top=25, left=350');</script>";
-			$this->load->model('m_regreport'); // load ke model m_registration mst_charge_rule
-			$data['trx_registration'] = $this->m_regreport->get_report_reg(); // 		
-			$this->template->set('title', 'Klinik | Registration Report');
-			$this->template->load('template', 'menu/reg_report', $data);
-		} else {
-			$this->load->model('m_regreport'); // load ke model m_registration mst_charge_rule
-			$data['trx_registration'] = $this->m_regreport->get_report_reg(); // 		
+
+			$data['datereg1'] = $datereg1;
+			$data['datereg2'] = $datereg2;
+
 			$this->template->set('title', 'Klinik | Registration Report');
 			$this->template->load('template', 'menu/reg_report', $data);
 		}
@@ -77,18 +70,17 @@ class Regreport extends CI_Controller
 		$this->load->view('menu/reg_report_excel', $data);
 	}
 
-	function print_reg()
+	public function print_reg()
 	{
-		$datereg1                   = $this->uri->segment(3);
-		$datereg2                   = $this->uri->segment(4);
+		$session_data     = $this->session->userdata('logged_in');
+		$datereg1         = $this->uri->segment(3);
+		$datereg2         = $this->uri->segment(4);
+		$loc              = $session_data['location'];
+		$data['username'] = $session_data['username'];
 
-		$session_data               = $this->session->userdata('logged_in');
-		$loc 	                    = $session_data['location'];
-		$data['username']           = $session_data['username'];
-		$this->load->model('m_regreport'); // load ke model m_registration mst_charge_rule
-		$data['report_reg_as_date'] = $this->m_regreport->report_reg_as_date($datereg1, $datereg2); // 
-		$this->load->model('m_registration'); // load ke model m_registration mst_charge_rule
-		$data['get_branch']         = $this->m_registration->get_mst_branch($loc); // ---""" " ---- mst_client_dept	
+		$data['report_reg_as_date'] = $this->m_regreport->report_reg_as_date($datereg1, $datereg2);
+		$data['get_branch']         = $this->m_registration->get_mst_branch($loc);
+
 		$this->template->set('title', 'Klinik | Registration Report');
 		$this->load->view('menu/print_reg', $data);
 	}
@@ -155,11 +147,56 @@ class Regreport extends CI_Controller
 			'reg_type' 			=> $this->input->post('reg_type'),
 		);
 
-		/* var_dump($data_reg); 
-die();  */
-
-		$this->load->model('m_registration'); // go to model/m_registration patien dan kirim array data reg
 		$this->m_registration->save_registration($data_reg);  // load dari model/function save_registration($data_reg)
 		redirect('registration/reg_patien');
+	}
+
+	public function get_list_registration()
+	{
+		$data = $this->m_regreport->get_list();
+		$code = 500;
+
+		if ($data) {
+			$code = 200;
+		}
+
+		$result = [];
+
+		if ($data->num_rows() > 0) {
+			foreach ($data->result() as $key) {
+				$nested = [
+					'id'         => $key->id,
+					'id_reg'     => $key->id_reg,
+					'id_pat'     => $key->id_pat,
+					'reg_date'   => $key->reg_date,
+					'pat_name'   => $key->pat_name,
+					'title_desc' => $key->title_desc,
+					'pat_dob'    => $key->pat_dob,
+					'price_type' => $key->price_type,
+					'age'        => $this->generate_age($key->pat_dob),
+				];
+
+				array_push($result, $nested);
+			}
+		}
+
+		echo json_encode([
+			'code'     => $code,
+			'num_rows' => $data->num_rows(),
+			'result'   => $result,
+		]);
+	}
+
+	public function generate_age($dob = null)
+	{
+		if ($dob == null) {
+			$dob = new DateTime();
+		}
+
+		$current_date = new DateTime();
+		$dob = new DateTime($dob);
+		$interval = $current_date->diff($dob);
+
+		return $interval->y . ' Year ' . $interval->m . ' Month';
 	}
 }
