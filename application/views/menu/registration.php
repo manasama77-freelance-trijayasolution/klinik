@@ -80,7 +80,7 @@ $pat_name = $this->uri->segment(5);
 			<div class="block-content collapse in">
 				<div class="span12">
 					<div style="overflow-y: auto; height:auto;">
-						<form action="<?php echo base_url(); ?>registration/save_reg2" method="post" class="form-horizontal" onSubmit="if(!confirm('Is the form filled out correctly ?')){return false;}" id="form_sample_1" name="quesioner_mcu">
+						<form action="<?= site_url(); ?>registration/save_reg2" method="post" class="form-horizontal" onSubmit="if(!confirm('Is the form filled out correctly ?')){return false;}" id="form_sample_1" name="quesioner_mcu">
 							<fieldset>
 								<div class="alert alert-error hide" style="width: 550px;">
 									<button class="close" data-dismiss="alert">&times;</button>
@@ -112,7 +112,6 @@ $pat_name = $this->uri->segment(5);
 										<div class="controls">
 											<input class="input-large" id="pat_mrn" style="text-transform: uppercase;" name="pat_mrn" type="text" required readonly>
 											<input class="input-small" id="id_pat" name="id_pat" type="hidden">
-											<input class="input-small" id="id_dr" name="id_dr" type="hidden" value="111">
 											<button type="button" onclick="showFormPatient();" class="btn btn-info btn-mini"><i class="icon-plus-sign"></i> <b>Add New Patient</b></button>
 											<button type="button" onclick="popup_s();" class="btn btn-success btn-mini"><i class="icon-search"></i> <b>Find Patient</b></button>
 											<span for="pat_mrn" class="help-inline"></span>
@@ -125,6 +124,20 @@ $pat_name = $this->uri->segment(5);
 											<!-- <input type="hidden" name="pat_charge_rule" value="2">package -->
 											<input type="date" name="reg_date" class="input-large" id="reg_date" value="<?php echo date("Y-m-d"); ?>">
 											<span class="btn-mini tooltip-right" data-original-title="Date of Registration adalah tanggal kunjungan pasien pada hari ini, namun bisa disesuaikan tanggalnya."><i class="icon-question-sign"></i></span>
+										</div>
+									</div>
+
+									<div class="control-group">
+										<label class="control-label" for="reg_date"><b>Doctor</b> <span class="required">*</span></label>
+										<div class="controls">
+											<select id="id_dr" name="id_dr" required>
+												<option value="">-Select Doctor-</option>
+												<?php
+												foreach ($arr_doctor->result() as $key) {
+													echo '<option value="' . $key->id_dr . '">' . $key->drname . '</option>';
+												}
+												?>
+											</select>
 										</div>
 									</div>
 

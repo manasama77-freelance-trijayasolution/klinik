@@ -1375,27 +1375,7 @@ class Docter extends CI_Controller
 
 				if ($post == "on") {
 
-					$data_order_lab_h = array(
-						'id_reg'       => $id_registration,
-						'id_pat'       => $id_patient,
-						'order_type'   => 0,
-						'order_date'   => $current_date_time,
-						'order_status' => 1,
-						'user_id'      => $user_id,
-					);
-
-					$exec_data_order_lab_h = $this->m_docter->order_lab_h($data_order_lab_h);
-
-					if (!$exec_data_order_lab_h) {
-						$this->db->trans_rollback();
-						echo json_encode(['code' => $code, 'msg' => 'error $exec_data_order_lab_h']);
-						exit;
-					}
-
-					$id_order = $this->db->insert_id();
-
 					$nested = [
-						'id_order'   => $id_order,
 						'id_reg'     => $id_registration,
 						'id_patient' => $id_patient,
 						'odo_value'  => $a,
@@ -1474,7 +1454,7 @@ class Docter extends CI_Controller
 				exit;
 			}
 
-			$data_trx_registration  = ['status_reg' => 0];
+			$data_trx_registration  = ['status_reg' => 1];
 			$where_trx_registration = ['id_reg'     => $id_registration];
 			$exec_trx_registration  = $this->m_docter->update_registration($data_trx_registration, $where_trx_registration);
 

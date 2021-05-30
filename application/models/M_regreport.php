@@ -39,11 +39,19 @@ class M_regreport extends CI_Model
 
 	function report_expense_as_date($datereg1, $datereg2)
 	{
-		$this->db->select('trx_item_po_h.id_po, trx_item_po_d.id_item_po_d, trx_item_po_h.created_date, trx_item_po_d.item_id, trx_item_po_d.item_qty, trx_item_po_h.supplier_id, trx_item_po_d.item_amount');
-		$this->db->from('trx_item_po_h');
-		$this->db->join('trx_item_po_d', 'trx_item_po_h.id_po=trx_item_po_d.id_po_header', 'inner');
-		$this->db->order_by('trx_item_po_h.created_date', 'desc');
-		$this->db->where("SUBSTRING(trx_item_po_h.created_date,1,10) BETWEEN '$datereg1' AND '$datereg2'");
+		$this->db->select([
+			'nama_barang',
+			'nama_supplier',
+			'qty',
+			'harga',
+			'biaya_tambahan',
+			'sub_total',
+			'created_at',
+		]);
+		$this->db->from('expense');
+		$this->db->where("DATE(created_at) BETWEEN '$datereg1' AND '$datereg2'");
+		$this->db->where('deleted_at', null);
+		$this->db->order_by('created_at', 'desc');
 		$query = $this->db->get();
 		return $query;
 	}
@@ -101,6 +109,92 @@ class M_regreport extends CI_Model
 					WHERE DATE(trx_item_po_h.created_date) BETWEEN '$datereg1' AND '$datereg2'
 				) A ORDER BY tgl DESC");
 		return $query;
+	}
+
+	public function report_profit_as_date_adam($datereg1, $datereg2)
+	{
+		$query1 = $this->db
+			->select('trx_registration.id_reg')
+			->from('trx_registration')
+			->where('status_reg', 3)
+			->where('reg_date >=', $datereg1)
+			->where('reg_date <=', $datereg2)
+			->get();
+
+		if ($query1->num_rows() == 0) {
+			$arr_out = [];
+		} else {
+			$total = 0;
+			$grand_total = 0;
+			$result      = [];
+			$arr_reg     = [];
+			$a           = 0;
+
+			foreach ($query1->result() as $key) {
+				$arr_reg[$a] = $key->id_reg;
+				$a++;
+			}
+
+			$query2 = $this->db
+				->select([
+					"date(trx_pat_payment_h.payment_date) as payment_date",
+					"mst_services.serv_name as `out`",
+					"trx_pat_payment_h.total_billing as `price_out`",
+				])
+				->from('pat_order_h')
+				->join('trx_pat_payment_h', 'trx_pat_payment_h.id_reg = pat_order_h.id_reg', 'left')
+				->join('pat_order_d', 'pat_order_d.id_order_header = pat_order_h.id_order', 'left')
+				->join('mst_services', 'mst_services.id_service = pat_order_d.id_service', 'left')
+				->where_in("pat_order_h.id_reg", $arr_reg)
+				->get();
+
+			foreach ($query2->result() as $key) {
+				$total = $total + $key->price_out;
+				$arr_out = [
+					'date'      => $key->payment_date,
+					'in'        => '',
+					'out'       => $key->out,
+					'price_in'  => '',
+					'price_out' => $key->price_out,
+					'total'     => $total,
+				];
+
+				array_push($result, $arr_out);
+			}
+
+			$query3 = $this->db
+				->select([
+					'date(expense.created_at) as payment_date',
+					'expense.nama_barang as `in`',
+					'expense.harga as `price_in`',
+				])
+				->from('expense')
+				->where('expense.deleted_at', null)
+				->where('expense.created_at >=', $datereg1)
+				->where('expense.created_at <=', $datereg2)
+				->get();
+
+			foreach ($query3->result() as $key) {
+				$total = $total - $key->price_in;
+				$arr_out = [
+					'date'      => $key->payment_date,
+					'in'        => $key->in,
+					'out'       => '',
+					'price_in'  => $key->price_in,
+					'price_out' => '',
+					'total'     => $total,
+				];
+
+				array_push($result, $arr_out);
+			}
+		}
+
+		$return = [
+			'result' => $result,
+			'total'  => $total,
+		];
+
+		return $return;
 	}
 
 	public function report_reg_as_date($datereg1 = null, $datereg2 = null)

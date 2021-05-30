@@ -19,3 +19,13 @@ ADD COLUMN `odo_value` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL 
 ALTER TABLE `u1029257_kyoaims`.`mst_odo` 
 CHANGE COLUMN `odo_value` `odo_desc` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL AFTER `id_patient`,
 ADD COLUMN `odo_value` int UNSIGNED NULL AFTER `id_patient`;
+
+
+ALTER TABLE `u1029257_kyoaims`.`mst_doctor` 
+ADD COLUMN `deleted_at` datetime NULL AFTER `drnationality`;
+
+ALTER TABLE `u1029257_kyoaims`.`mst_odo` 
+DROP COLUMN `id_order`;
+
+ALTER TABLE `u1029257_kyoaims`.`trx_pat_payment_h` 
+MODIFY COLUMN `id_reg` varchar(255) NULL DEFAULT NULL AFTER `id_payment`;

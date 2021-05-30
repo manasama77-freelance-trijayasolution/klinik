@@ -7,6 +7,10 @@ class Registration extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('m_patient');
+		$this->load->model('m_registration');
+		$this->load->model('m_lab');
+		$this->load->model('m_login');
+		$this->load->model('m_doctor');
 	}
 
 	function index()
@@ -29,7 +33,6 @@ class Registration extends CI_Controller
 			$session_data                  = $this->session->userdata('logged_in');
 			$data['username']              = $session_data['username'];
 			$loc 	                       = $session_data['location'];
-			$this->load->model('m_registration'); // load ke model m_registration mst_charge_rule
 			$data['refe']     			   = $this->m_registration->get_reference();
 			$data['get_charge_rule']       = $this->m_registration->get_mst_charge_rule(); // $data['get_charge_rule'] parameter di kirim ke view /menu/registration php
 			$data['get_paytype']           = $this->m_registration->get_mst_paytype(); // ---                    """ " ---- Paytype
@@ -46,9 +49,11 @@ class Registration extends CI_Controller
 			$data['get_service_package_h'] = $this->m_registration->get_mst_service_package_h(); // ---""" " ---- mst_client_dept		
 			$data['get_branch']            = $this->m_registration->get_mst_branch($loc); // ---                  """ " ---- mst_client_dept		
 
-			$data['title'] = $this->m_patient->get_mst_title();
-			$data['gender'] = $this->m_patient->get_list_gender();
-			$data['marital'] = $this->m_patient->get_list_marital();
+			$data['title']      = $this->m_patient->get_mst_title();
+			$data['gender']     = $this->m_patient->get_list_gender();
+			$data['marital']    = $this->m_patient->get_list_marital();
+			$data['marital']    = $this->m_patient->get_list_marital();
+			$data['arr_doctor'] = $this->m_doctor->get_list();
 
 			$this->template->set('title', 'Klinik | Registration');
 			$this->template->load('template', 'menu/registration', $data);
@@ -61,7 +66,6 @@ class Registration extends CI_Controller
 
 	function reg_update()
 	{
-		$this->load->model('m_registration');
 
 		if ($this->session->userdata('logged_in')) {
 			$id_reg             		   = $this->uri->segment(3);
@@ -100,7 +104,6 @@ class Registration extends CI_Controller
 			$session_data          = $this->session->userdata('logged_in');
 			$data['username']      = $session_data['username'];
 			$loc 	               = $session_data['location'];
-			$this->load->model('m_registration'); // load ke model m_registration mst_charge_rule
 			$data['regdetpatient'] = $this->m_registration->get_regdetpatient($id_reg); // ---""" " ---- mst_client_dept
 			$data['get_branch']    = $this->m_registration->get_mst_branch($loc); // ---""" " ---- mst_client_dept
 			$this->template->set('title', 'Klinik | Print Registration');
@@ -133,7 +136,6 @@ class Registration extends CI_Controller
 
 	public function save_reg2()
 	{
-		$this->load->model('m_registration');
 		if ($this->session->userdata('logged_in')) {
 			$session_data = $this->session->userdata('logged_in');
 			$user_id      = $session_data['id'];
@@ -191,7 +193,6 @@ class Registration extends CI_Controller
 	function save_reg()
 	{
 		if ($this->session->userdata('logged_in')) {
-			$this->load->model('m_registration');
 			$id_reg 	= $this->input->post('id_reg');
 			$aa 		= $this->input->post('id_service');
 			$package 	= $this->input->post('package');
@@ -224,7 +225,6 @@ class Registration extends CI_Controller
 							'order_status'	=> 1,
 							'mcu'			=> 1,
 						);
-						$this->load->model('m_lab');
 						$this->m_lab->order_lab_h($data_pisik);
 						$aa = 1;
 						$type 					= $rows->order_type;
@@ -253,7 +253,6 @@ class Registration extends CI_Controller
 						'mcu'			=> $mcubilling,
 
 					);
-					$this->load->model('m_lab');
 					$this->m_lab->order_lab_h($data_lab);
 
 					foreach ($data['all_data']->result() as $row) {
@@ -281,7 +280,6 @@ class Registration extends CI_Controller
 						'user_id'		=> $user_id,
 						'mcu'			=> $mcubilling,
 					);
-					$this->load->model('m_lab');
 					$this->m_lab->order_lab_h($data_lab);
 
 					foreach ($data['all_radiology']->result() as $row2) {
@@ -340,7 +338,6 @@ class Registration extends CI_Controller
 			$session_data     = $this->session->userdata('logged_in');
 			$data['username'] = $session_data['username'];
 			$loc 	          = $session_data['location'];
-			$this->load->model('m_registration');
 			$data['apptoday'] = $this->m_registration->get_get_apptoday($loc);
 
 			$this->template->set('title', 'Klinik | Registration');
@@ -355,7 +352,6 @@ class Registration extends CI_Controller
 	function add_fingerid()
 	{
 		if ($this->session->userdata('logged_in')) {
-			$this->load->model('m_registration');
 			$session_data 			= $this->session->userdata('logged_in');
 			$data['username'] 		= $session_data['username'];
 			$this->template->set('title', 'Klinik | Add Finger ID');
@@ -384,8 +380,6 @@ class Registration extends CI_Controller
 	function pat_update()
 	{
 		if ($this->session->userdata('logged_in')) {
-			$this->load->model('m_patient');
-			$this->load->model('m_registration');
 			$id 						= $this->uri->segment(3);
 			$data['pat_mrn'] 			= $this->uri->segment(3);
 			$session_data 				= $this->session->userdata('logged_in');
@@ -413,7 +407,6 @@ class Registration extends CI_Controller
 
 	function registration_update()
 	{
-		$this->load->model('m_registration');
 
 		if ($this->session->userdata('logged_in')) {
 			$id_reg             		   = $this->uri->segment(3);
@@ -449,8 +442,6 @@ class Registration extends CI_Controller
 
 	function reg_update_process2()
 	{
-
-		$this->load->model('m_registration');
 
 		$session_data 					= $this->session->userdata('logged_in');
 		$data['userlevel']				= $session_data['userlevel'];
@@ -490,7 +481,6 @@ class Registration extends CI_Controller
 			'log_date'						=> date("Y-m-d H:i:s"),
 			'log_desc' 						=> "Update Registration | ID Registration : " . $id_reg . " | ID user : " . $user_id . " | Fullname : " . $data['fullname'] . " ",
 		);
-		$this->load->model('m_login');
 		$this->m_login->log($data_log);
 		//Endless Log
 
@@ -499,8 +489,6 @@ class Registration extends CI_Controller
 
 	function reg_update_process()
 	{
-
-		$this->load->model('m_registration');
 
 		$session_data 					= $this->session->userdata('logged_in');
 		$data['userlevel']				= $session_data['userlevel'];
@@ -537,7 +525,6 @@ class Registration extends CI_Controller
 			'log_date'						=> date("Y-m-d H:i:s"),
 			'log_desc' 						=> "Update Registration | ID Registration : " . $id_reg . " | ID user : " . $user_id . " | Fullname : " . $data['fullname'] . " ",
 		);
-		$this->load->model('m_login');
 		$this->m_login->log($data_log);
 		//Endless Log
 

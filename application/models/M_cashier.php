@@ -971,7 +971,7 @@ class M_cashier extends CI_Model
 		$this->db->join('trx_bh', 'trx_registration.id_reg = trx_bh.id_reg', 'left');
 		// $this->db->where('trx_registration.reg_date', $tgl); // Case untuk perhari ini..
 		// $this->db->where('IFNULL(trx_bh.STATUS, 0) !=', 4);
-		$this->db->where('trx_registration.status_reg', 0);
+		$this->db->where('trx_registration.status_reg', 1);
 		$this->db->order_by('trx_registration.reg_date', 'desc');
 		$query = $this->db->get();
 		return $query;
@@ -1315,12 +1315,14 @@ class M_cashier extends CI_Model
 			->select([
 				'trx_registration.id_reg',
 				'trx_registration.reg_date',
-				'pat_data.pat_name'
+				'pat_data.pat_name',
+				'mst_doctor.drname as doctor_name',
 			])
 			->from('trx_registration')
 			->join('pat_data', 'pat_data.id_Pat = trx_registration.id_pat')
+			->join('mst_doctor', 'mst_doctor.id_dr = trx_registration.id_dr')
 			->where("trx_registration.reg_date BETWEEN '$from' AND '$to'", null, false)
-			->where('trx_registration.status_reg in (1, 2)', null, false)
+			->where('trx_registration.status_reg', 3)
 			->order_by('trx_registration.reg_date', 'desc')
 			->get();
 
@@ -1354,5 +1356,17 @@ class M_cashier extends CI_Model
 			->get();
 
 		return $query;
+	}
+
+	public function report_patient_4($id_reg)
+	{
+		$id_reg = substr($id_reg, 1);
+
+		return $this->db
+			->select('trx_pat_payment_d.type_payment')
+			->from('trx_pat_payment_h')
+			->join('trx_pat_payment_d', 'trx_pat_payment_d.id_payment_header = trx_pat_payment_h.id_payment', 'left')
+			->where('id_reg', $id_reg)
+			->get();
 	}
 }

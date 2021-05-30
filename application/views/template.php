@@ -392,6 +392,10 @@ if ($result10 = mysqli_query($con, $query10)) {
                                             <a tabindex="-1" href="<?php echo base_url(); ?>marketing/mst_service"><i class="icon-folder-open"></i> Master Services </a>
                                         </li>
 
+                                        <li>
+                                            <a tabindex="-1" href="<?= base_url(); ?>doctor/doctor_management"><i class="icon-cog"></i> Master Doctor </a>
+                                        </li>
+
 
                                         <!-- Buka pembatas
                                                             
@@ -456,6 +460,9 @@ if ($result10 = mysqli_query($con, $query10)) {
                                         <?php if ($userlevel == "master" || $userlevel == "supervisor") { ?>
                                             <li>
                                                 <a tabindex="-1" href="<?php echo base_url(); ?>marketing/mst_service"><i class="icon-folder-open"></i> Master Services <b>(Price)</b></a>
+                                            </li>
+                                            <li>
+                                                <a tabindex="-1" href="<?= base_url(); ?>doctor/doctor_management"><i class="icon-cog"></i> Master Doctor </a>
                                             </li>
                                             <li>
                                                 <a tabindex="-1" href="<?php echo base_url(); ?>marketing/mst_grouping_items"><i class="icon-folder-open"></i> Master Grouping Items</a>
@@ -667,7 +674,8 @@ if ($result10 = mysqli_query($con, $query10)) {
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li><a tabindex="-1" href="<?php echo base_url(); ?>cashier/input_billing"><i class="icon-bold"></i> Bill To Patient</a></li>
-                                        <li><a tabindex="-1" href="<?php echo base_url(); ?>cashier/payment_list"><i class="icon-barcode"></i> Patient PayToday</a></li>
+                                        <li><a tabindex="-1" href="<?php echo base_url(); ?>cashier/payment_list"><i class="icon-barcode"></i> Patient Pay Today</a></li>
+                                        <li><a tabindex="-1" href="<?= base_url(); ?>expense"><i class="icon-book"></i> Expense</a></li>
 
                                         <!--
                                     <li><a tabindex="-1" href="<?php echo base_url(); ?>cashier/counter">Counter</a></li>

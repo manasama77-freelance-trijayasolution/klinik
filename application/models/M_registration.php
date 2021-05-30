@@ -26,7 +26,7 @@ class M_registration extends CI_Model
 
 	function get_mst_charge_rule()
 	{
-		$categories = array('2', '3', '5', '6', '1');
+		$categories = array('1', '2', '3', '5', '6');
 		$this->db->where_in('id_price_type', $categories);
 		return $this->db->get('mst_price_type'); //  load name of table
 	}

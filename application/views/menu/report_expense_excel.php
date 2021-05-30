@@ -1,40 +1,44 @@
-<?php 
+<?php
 header("Content-type: application/octet-stream");
 header("Content-Disposition: attachment; filename=Report Expense.xls");
 header("Pragma: no-cache");
 header("Expires: 0");
 ?>
 <h1 align="center">Report Expense</h1>
-<h3 align="center">Periode <?php echo $datereg1." s/d ".$datereg2;?></h3>
+<h3 align="center">Periode <?php echo $datereg1 . " s/d " . $datereg2; ?></h3>
 
-<table border='1' width="100%">
-<tr style="background-color:#A29D9B">
-	<th style="width:30px">No.</th>
-	<th>Date Expense</th>
-	<th>Item Name</th>
-	<th>Qty</th>
-	<th>Supplier Name</th>
-	<th>Amount</th>
-</tr>
-<?php
-$i 		=1;
-$total 	=0;
-foreach($data->result() as $row){
-	$total = $total+$row->item_amount;
-?>
-	<tr class="odd gradeX">
-		<td><?php echo $i++;?></td>
-		  <td><?php echo date("d.m.Y",strtotime($row->created_date));?></td> 
-		<td><?php echo $row->item_id;?> </td>
-		<td><?php echo $row->item_qty;?></td>
-		<td><?php echo $row->supplier_id;?></td>
-		<td align="right"><?php echo number_format($row->item_amount,2);?></td>
+<table border='1' width="100%" align="center">
+	<tr style="background-color:#A29D9B">
+		<th style="width:30px">No</th>
+		<th>Tgl Expense</th>
+		<th>Nama Barang</th>
+		<th>Nama Supplier</th>
+		<th>Qty</th>
+		<th>Harga</th>
+		<th>Biaya Tambahan</th>
+		<th>Total</th>
 	</tr>
-<?php
-}
-?>
+	<?php
+	$i = 1;
+	$grand_total = 0;
+	foreach ($data->result() as $row) {
+		$grand_total = $grand_total + $row->sub_total;
+	?>
+		<tr class="odd gradeX">
+			<td><?= $i++; ?></td>
+			<td><?= $row->created_at; ?></td>
+			<td><?= $row->nama_barang; ?> </td>
+			<td><?= $row->nama_supplier; ?> </td>
+			<td align="right"><?= number_format($row->qty, 0); ?></td>
+			<td align="right"><?= number_format($row->harga, 0); ?></td>
+			<td align="right"><?= number_format($row->biaya_tambahan, 0); ?></td>
+			<td align="right"><?= number_format($row->sub_total, 0); ?></td>
+		</tr>
+	<?php
+	}
+	?>
 	<tr>
-		<td align="center" colspan="5">TOTAL</td>
-		<td align="right"><?php echo number_format($total,2);?></td>
+		<td align="right" colspan="7"><b>GRAND TOTAL</b></td>
+		<td align="right"><b><?= number_format($grand_total, 0); ?></b></td>
 	</tr>
 </table>

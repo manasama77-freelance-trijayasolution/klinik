@@ -232,7 +232,7 @@ class Cashier extends CI_Controller
 			$user_id						= $session_data['id'];
 			$data['username'] 				= $session_data['username'];
 			$data['loc'] 					= $session_data['location'];
-			$now							= date("Y-m-d H:i:s");
+			$now_date_time					= date("Y-m-d H:i:s");
 
 			$data['id_reg'] 				= $this->input->post('id_reg');
 			$data['id_pat']					= $this->input->post('id_pat');
@@ -285,13 +285,12 @@ class Cashier extends CI_Controller
 			// Batas Mendapatkan kurs paling update....
 
 			// khusus generate billing dibawah ini...
-			//adam
 			$seq_bill						= $this->m_cashier->get_num_billing();
-			$data['numbilling']				= $this->m_cashier->get_list_billing($id_reg);
-			$numbilling						= $this->m_cashier->get_list_billing($id_reg);
-			$data['jumlahbill']				= $numbilling->num_rows();
-			$jumlahbill						= $numbilling->num_rows();
 			$nobilll						= $seq_bill->num_rows();
+			$numbilling						= $this->m_cashier->get_list_billing($id_reg);
+			$jumlahbill						= $numbilling->num_rows();
+			$data['numbilling']				= $numbilling;
+			$data['jumlahbill']				= $jumlahbill;
 
 			foreach ($numbilling->result() as $rowb) {
 				$data['id_billing']			= $rowb->id_billing;
@@ -304,13 +303,20 @@ class Cashier extends CI_Controller
 
 			if ($jumlahbill == 0) {
 
-				$insert_billing					= array(
-					'id_reg'				 		=> $id_reg,
-					'bill_no'				 		=> $nomorbill,
-					'seq_no'				 		=> $tambahan,
-					'create_by' 					=> $user_id,
-					'create_date' 					=> date("Y-m-d H:i:s"),
-					'bill_date' 					=> date("Y-m-d H:i:s"),
+				$insert_billing = array(
+					'id_reg'           => $id_reg,
+					'id_bh'            => null,
+					'bill_no'          => $nomorbill,
+					'bill_date'        => $now_date_time,
+					'seq_no'           => $tambahan,
+					'type_charge_rule' => null,
+					'status'           => 0,
+					'total'            => 0,
+					'create_by'        => $user_id,
+					'create_date'      => $now_date_time,
+					'percent'          => 0,
+					'disc'             => 0,
+					'grand_total'      => 0,
 				);
 				$this->m_cashier->insert_trx_billing($insert_billing);
 			}
@@ -352,11 +358,13 @@ class Cashier extends CI_Controller
 			// Jika data masih kosong maka masuk ke bawah ini..
 			if ($jml == 0) {
 
-				$max_billing					= $this->m_cashier->get_max_trx_billing($id_reg);
+				$max_billing = $this->m_cashier->get_max_trx_billing($id_reg);
+
 				foreach ($max_billing->result() as $rowb) {
 					$data['id_billing'] = $rowb->id_billing;
 				}
-				$id_billing						= $data['id_billing'];
+
+				$id_billing = $data['id_billing'];
 
 				$data_insert				= array(
 					'id_reg'				 	=> $data['id_reg'],
@@ -390,7 +398,9 @@ class Cashier extends CI_Controller
 						'id_bh'				 		=> $id_bh,
 						'id_service'				=> $id_package,
 						'code_service' 				=> 12,
+						'name_service' 				=> null,
 						'type_charge_rule' 			=> $type_charge_rule,
+						'id_serv_group' 			=> null,
 						'split' 					=> 1,
 						'price' 					=> $grand_total,
 						'price_old' 				=> $grand_total,
@@ -1557,7 +1567,7 @@ class Cashier extends CI_Controller
 			}
 
 			// --------- proses update status registration ---------
-			$data_update = array('status_reg' => 1,);
+			$data_update = array('status_reg' => 2);
 			$this->m_registration->reg_update($id_reg, $data_update);
 			// --------- batas proses update status registration ---------
 
@@ -2221,7 +2231,7 @@ class Cashier extends CI_Controller
 				$status_billing		= 2;
 
 				// --------- proses update status registration ---------
-				$data_update = array('status_reg' => 2,);
+				$data_update = array('status_reg' => 3);
 				$this->m_registration->reg_update($id_reg, $data_update);
 				// --------- batas proses update status registration ---------
 
@@ -2391,9 +2401,10 @@ class Cashier extends CI_Controller
 		if ($arr1->num_rows() > 0) {
 			$no = 1;
 			foreach ($arr1->result() as $key) {
-				$id_reg = $key->id_reg;
-				$reg_date = $key->reg_date;
-				$pat_name = $key->pat_name;
+				$id_reg      = $key->id_reg;
+				$reg_date    = $key->reg_date;
+				$pat_name    = $key->pat_name;
+				$doctor_name = $key->doctor_name;
 
 				$arr2 = $this->m_cashier->report_patient_2($id_reg);
 
@@ -2429,14 +2440,28 @@ class Cashier extends CI_Controller
 					$serv .= '-';
 				}
 
+				$arr4 = $this->m_cashier->report_patient_4($id_reg);
+
+				$type_payment = "Cash";
+
+				if ($arr4->num_rows() > 0) {
+					if ($arr4->row()->type_payment == '1') {
+						$type_payment = "Credit Card";
+					} elseif ($arr4->row()->type_payment == '5') {
+						$type_payment = "Debit Card";
+					}
+				}
+
 				$nested = [
-					'no'        => $no,
-					'id_reg'    => $id_reg,
-					'reg_date'  => $reg_date,
-					'pat_name'  => $pat_name,
-					'odo'       => $odo,
-					'serv'      => $serv,
-					'sub_total' =>  $sub_total,
+					'no'           => $no,
+					'id_reg'       => $id_reg,
+					'reg_date'     => $reg_date,
+					'pat_name'     => $pat_name,
+					'odo'          => $odo,
+					'serv'         => $serv,
+					'doctor_name'  => $doctor_name,
+					'type_payment' => $type_payment,
+					'sub_total'    => $sub_total,
 				];
 
 				array_push($result, $nested);
@@ -2461,15 +2486,17 @@ class Cashier extends CI_Controller
 
 		$arr1 = $this->m_cashier->report_patient_1($from, $to);
 
+
 		$result = [];
 		$grand_total = 0;
 
 		if ($arr1->num_rows() > 0) {
 			$no = 1;
 			foreach ($arr1->result() as $key) {
-				$id_reg = $key->id_reg;
-				$reg_date = $key->reg_date;
-				$pat_name = $key->pat_name;
+				$id_reg      = $key->id_reg;
+				$reg_date    = $key->reg_date;
+				$pat_name    = $key->pat_name;
+				$doctor_name = $key->doctor_name;
 
 				$arr2 = $this->m_cashier->report_patient_2($id_reg);
 
@@ -2505,14 +2532,28 @@ class Cashier extends CI_Controller
 					$serv .= '-';
 				}
 
+				$arr4 = $this->m_cashier->report_patient_4($id_reg);
+
+				$type_payment = "Cash";
+
+				if ($arr4->num_rows() > 0) {
+					if ($arr4->row()->type_payment == '1') {
+						$type_payment = "Credit Card";
+					} elseif ($arr4->row()->type_payment == '5') {
+						$type_payment = "Debit Card";
+					}
+				}
+
 				$nested = [
-					'no'        => $no,
-					'id_reg'    => $id_reg,
-					'reg_date'  => $reg_date,
-					'pat_name'  => $pat_name,
-					'odo'       => $odo,
-					'serv'      => $serv,
-					'sub_total' =>  $sub_total,
+					'no'           => $no,
+					'id_reg'       => $id_reg,
+					'reg_date'     => $reg_date,
+					'pat_name'     => $pat_name,
+					'odo'          => $odo,
+					'serv'         => $serv,
+					'doctor_name'  => $doctor_name,
+					'type_payment' => $type_payment,
+					'sub_total'    => $sub_total,
 				];
 
 				array_push($result, $nested);
@@ -2556,11 +2597,7 @@ class Cashier extends CI_Controller
 		$datereg2 					= $this->input->post('datereg2');
 		$data['datereg1']			= $this->input->post('datereg1');
 		$data['datereg2']			= $this->input->post('datereg2');
-		$data['data'] 				= $this->m_regreport->report_expense_as_date_adam($datereg1, $datereg2);
-
-		echo $this->db->last_query();
-		// print_r($data['data']->result());
-		exit;
+		$data['data'] 				= $this->m_regreport->report_expense_as_date($datereg1, $datereg2);
 		$this->load->view('menu/report_expense_excel', $data);
 	}
 
@@ -2638,7 +2675,8 @@ class Cashier extends CI_Controller
 		$datereg2 					= $this->input->post('datereg2');
 		$data['datereg1']			= $this->input->post('datereg1');
 		$data['datereg2']			= $this->input->post('datereg2');
-		$data['data'] 				= $this->m_regreport->report_profit_as_date($datereg1, $datereg2);
+		$render_profit = $this->m_regreport->report_profit_as_date_adam($datereg1, $datereg2);
+		$data['arr_data'] = $render_profit;
 		$this->load->view('menu/report_profit_excel', $data);
 	}
 
@@ -2647,16 +2685,13 @@ class Cashier extends CI_Controller
 		$this->load->model('m_regreport');
 		$session_data 				= $this->session->userdata('logged_in');
 		$data['username'] 			= $session_data['username'];
-		$act      					= $this->input->post('act');
-		$id_reg1  					= $this->input->post('id_reg1');
-		$id_reg2  					= $this->input->post('id_reg2');
-		$datereg1 					= $from;
-		$datereg2 					= $to;
 		$data['datereg1']			= $from;
 		$data['datereg2']			= $to;
-		$data['data'] 				= $this->m_regreport->report_profit_as_date($datereg1, $datereg2);
 
-		$html2pdf = new Html2Pdf();
+		$render_profit = $this->m_regreport->report_profit_as_date_adam($from, $to);
+		$data['arr_data'] = $render_profit;
+
+		$html2pdf = new Html2Pdf('L', 'A4', 'en');
 		$result = $this->load->view('menu/report_profit_pdf', $data, true);
 		$html2pdf->writeHTML($result);
 		$html2pdf->output();

@@ -21,7 +21,21 @@
 - report patient tambahkan fitur preview (done)
 - report patient tambahkan metode pembayaran (done)
 - report patient data odontogram di tampilkan (done)
+- tambah menu master doctor (new) (done)
 
-- fitur  expense aktifkan
+- fitur expense aktifkan (done)
+	- tgl expense
+	- nama barang
+	- nama supplier
+	- qty
+	- harga
+	- biaya tambahan
+	- sub total (qty * harga + biaya tambahan)
+- data report expense ambil dari tabel expense (done)
+- data expense juga terkait data profit (done)
+- dropdown admin di hide selain logout
+- History odontogram di menu doctor -> doctor order list -> View Data
+
+- upload di subdomain magista.trijayasolution.co.id
+
 - penambahan fitur DP (optional)
-- tambah menu master doctor (new)

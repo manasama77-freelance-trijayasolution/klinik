@@ -1963,7 +1963,7 @@ WHERE mkt_posting_pack_h.id_quot IN (' . $param . ')
 
 	public function pat_mrn()
 	{
-		$sql = "SELECT pat_mrn id,cast(left(pat_mrn,4) as decimal) dt FROM pat_data ORDER BY id_pat DESC LIMIT 1";
+		$sql = "SELECT pat_mrn id, cast(left(pat_mrn,4) as decimal) dt FROM pat_data ORDER BY id_pat DESC LIMIT 1";
 
 		$query = $this->db->query($sql);
 

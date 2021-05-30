@@ -142,6 +142,7 @@ if ($Hour >= 5 && $Hour <= 10) {
 								<table class="table table-striped table-bordered">
 									<thead>
 										<tr>
+											<th style="text-align: center;">No</th>
 											<th style="text-align: center;">Patient Name</th>
 											<th style="text-align: center;">Registration Date</th>
 											<th style="text-align: center;">Appointment Date</th>
@@ -151,11 +152,13 @@ if ($Hour >= 5 && $Hour <= 10) {
 									<tbody>
 										<?php if ($arr_appointment->num_rows() == 0) { ?>
 											<tr>
-												<td class="text-error" colspan="4" style="text-align: center;">No Appointment Data</td>
+												<td class="text-error" colspan="5" style="text-align: center;">No Appointment Data</td>
 											</tr>
 										<?php } else { ?>
+											<?php $no = 1; ?>
 											<?php foreach ($arr_appointment->result() as $key) { ?>
 												<tr>
+													<td style="text-align: center;"><?= $no++; ?></td>
 													<td style="text-align: center;"><?= $key->patient_name; ?></td>
 													<td style="text-align: center;"><?= $key->registration_date; ?></td>
 													<td style="text-align: center;"><?= $key->appointment_date; ?></td>

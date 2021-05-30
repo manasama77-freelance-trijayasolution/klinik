@@ -10,6 +10,7 @@
         <th style="text-align: center;">ODONTOGRAM</th>
         <th style="text-align: center;">SERVICE</th>
         <th style="text-align: center;">DOCTOR NAME</th>
+        <th style="text-align: center; min-width: 100px; width: 100px;">PAYMENT METHOD</th>
         <th style="text-align: center; min-width: 100px; width: 100px;">PRICE</th>
     </tr>
     <?php
@@ -24,14 +25,15 @@
             <td style="vertical-align: top;"><?= $key['pat_name']; ?> </td>
             <td style="vertical-align: top;"><?= $key['odo']; ?></td>
             <td style="vertical-align: top;"><?= $key['serv']; ?></td>
-            <td style="vertical-align: top;">Magista Lutfia. Drg</td>
+            <td style="vertical-align: top;"><?= $key['doctor_name']; ?></td>
+            <td style="vertical-align: top;"><?= $key['type_payment']; ?></td>
             <td style="vertical-align: top; text-align: right;"><?php echo number_format($key['sub_total'], 0); ?></td>
         </tr>
     <?php
     }
     ?>
     <tr>
-        <td align="right" colspan="7"><b>TOTAL</b></td>
+        <td align="right" colspan="8"><b>TOTAL</b></td>
         <td align="right"><b><?= number_format($grand_total, 0); ?></b></td>
     </tr>
 </table>

@@ -436,8 +436,10 @@ if ($jumlahpay > 0) {
 						</table>
 
 						<div class="form-actions">
-							<button type="submit" class="btn btn-success" name="simpan" value="save" /><b>Paid Today</b></button>
-							<button type="button" class="btn btn-success" name="simpan" value="save" onclick="print_receipt();" /><b>Print</b></button>
+							<!-- <button type="submit" class="btn btn-success" name="simpan" value="save" /><b>Paid Today</b></button>
+							<button type="button" class="btn btn-success" name="simpan" value="save" onclick="print_receipt();" /><b>Print</b></button> -->
+
+							<button type="submit" class="btn btn-success" name="simpan" value="save" /><b>Print</b></button>
 						</div>
 				</form>
 

@@ -6,6 +6,8 @@ class Patient extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
+		$this->load->model('m_login');
+		$this->load->model('m_patient');
 	}
 
 	function index()
@@ -3685,21 +3687,16 @@ class Patient extends CI_Controller
 
 	public function add_new_patient_ajax()
 	{
-		$this->load->model('m_login');
-		$this->load->model('m_patient');
-
 		$code = 500;
 		if ($this->session->userdata('logged_in')) {
-			$session_data       = $this->session->userdata('logged_in');
-			$user_id				= $session_data['id'];
-			$loc = $session_data['location'];
+			$session_data = $this->session->userdata('logged_in');
+			$user_id      = $session_data['id'];
+			$loc          = $session_data['location'];
 
 			$code_no = $this->m_patient->pat_mrn();
 
 			if ($code_no == false) {
-				$code = 403;
-				echo json_encode(['code' => $code]);
-				exit;
+				$code_no = 1;
 			}
 
 			$pat_mrn = $loc . $code_no;
