@@ -405,15 +405,14 @@ class Docter extends CI_Controller
 			redirect('login', 'refresh');
 		}
 	}
-	function print_list_order()
+
+	public function print_list_order()
 	{
 		if ($this->session->userdata('logged_in')) {
 			$session_data = $this->session->userdata('logged_in');
 			$data['username'] = $session_data['username'];
 			$loc 	 = $session_data['location'];
 			$id_reg 						= $this->uri->segment(3);
-			/* 		var_dump($id);
-		exit(); */
 			$session_data 					= $this->session->userdata('logged_in');
 			$data['username'] 				= $session_data['username'];
 			$data['data'] 					= $this->m_docter->print_list_order($id_reg);
@@ -429,6 +428,10 @@ class Docter extends CI_Controller
 				$id_package = $row->id_package;
 			}
 			$data['detailmcu']	 			= $this->m_docter->print_mcu($id_reg, $id_package);
+
+			$arr_odo = $this->m_docter->get_data_odo($id_reg);
+			$data['arr_odo'] = $arr_odo;
+
 			$this->template->set('title', 'Klinik | Radiology Order List');
 			$this->load->view('menu/print_list_order', $data);
 		} else {

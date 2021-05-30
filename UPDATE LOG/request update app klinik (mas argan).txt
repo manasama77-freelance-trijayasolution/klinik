@@ -33,8 +33,8 @@
 	- sub total (qty * harga + biaya tambahan)
 - data report expense ambil dari tabel expense (done)
 - data expense juga terkait data profit (done)
-- dropdown admin di hide selain logout
-- History odontogram di menu doctor -> doctor order list -> View Data
+- dropdown admin di hide selain logout (done)
+- History odontogram di menu doctor -> doctor order list -> View Data (done)
 
 - upload di subdomain magista.trijayasolution.co.id
 

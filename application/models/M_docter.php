@@ -581,4 +581,12 @@ class M_docter extends CI_Model
 	{
 		return $this->db->update('trx_registration', $data, $where);
 	}
+
+	public function get_data_odo($id_reg)
+	{
+		return $this->db
+			->from('mst_odo')
+			->where('id_reg', $id_reg)
+			->get();
+	}
 }

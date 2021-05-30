@@ -225,7 +225,7 @@ if ($result10 = mysqli_query($con, $query10)) {
                                 <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i> <?php echo ucwords($username); ?><i class="caret"></i>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li>
+                                    <!-- <li>
                                         <a tabindex="-1" href="<?php echo base_url(); ?>user/edit/<?php echo ucwords($id); ?>"><i class="icon-list"></i> Profile</a>
                                     </li>
                                     <li>
@@ -246,7 +246,7 @@ if ($result10 = mysqli_query($con, $query10)) {
                                     <li class="divider"></li>
                                     <li>
                                         <a tabindex="-1" href="<?php echo base_url(); ?>f_home/"> <i class=" icon-briefcase"></i> Admin Area</a>
-                                    </li>
+                                    </li> -->
                                     <li>
                                         <a tabindex="-1" href="<?php echo base_url(); ?>home/logout"> <i class=" icon-off"></i> Logout</a>
                                     </li>
