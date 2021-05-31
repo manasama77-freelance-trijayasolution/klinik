@@ -36,6 +36,11 @@
 - dropdown admin di hide selain logout (done)
 - History odontogram di menu doctor -> doctor order list -> View Data (done)
 
-- upload di subdomain magista.trijayasolution.co.id
+- upload di subdomain magista.trijayasolution.co.id (done)
 
 - penambahan fitur DP (optional)
+
+DB AUTH
+db name = u1029257_magista 
+db_user = u1029257_magistaxxx
+db_pass = 19m*.DH?3R.[
