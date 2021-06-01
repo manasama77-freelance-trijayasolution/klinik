@@ -12,8 +12,3 @@
 
 # PhpUnit
 /build/
-
-# Composer
-/bin/
-/vendor/
-/composer.lock
