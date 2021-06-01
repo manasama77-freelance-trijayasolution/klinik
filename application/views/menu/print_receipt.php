@@ -84,14 +84,14 @@
 					<td>&nbsp;</td>
 				</tr>
 				<tr>
-					<td style="width:65%; text-align:right;">BAYAR</td>
-					<td style="width:5%; text-align:right;"> : </td>
-					<td style="width:30%; text-align:right;"><?php echo number_format($trx_pat_payment_d->row()->bayar, 0, ",", "."); ?></td>
-				</tr>
-				<tr>
 					<td style="width:65%; text-align:right;">DISC</td>
 					<td style="width:5%; text-align:right;"> : </td>
 					<td style="width:30%; text-align:right;"><?php echo number_format($header->disc, 0, ",", "."); ?></td>
+				</tr>
+				<tr>
+					<td style="width:65%; text-align:right;">BAYAR</td>
+					<td style="width:5%; text-align:right;"> : </td>
+					<td style="width:30%; text-align:right;"><?php echo number_format($trx_pat_payment_d->row()->bayar, 0, ",", "."); ?></td>
 				</tr>
 		</table>
 
