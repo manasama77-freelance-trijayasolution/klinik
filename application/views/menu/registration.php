@@ -112,7 +112,7 @@ $pat_name = $this->uri->segment(5);
 										<div class="controls">
 											<input class="input-large" id="pat_mrn" style="text-transform: uppercase;" name="pat_mrn" type="text" required readonly>
 											<input class="input-small" id="id_pat" name="id_pat" type="hidden">
-											<button type="button" onclick="showFormPatient();" class="btn btn-info btn-mini"><i class="icon-plus-sign"></i> <b>Add New Patient</b></button>
+											<!-- <button type="button" onclick="showFormPatient();" class="btn btn-info btn-mini"><i class="icon-plus-sign"></i> <b>Add New Patient</b></button> -->
 											<button type="button" onclick="popup_s();" class="btn btn-success btn-mini"><i class="icon-search"></i> <b>Find Patient</b></button>
 											<span for="pat_mrn" class="help-inline"></span>
 										</div>
