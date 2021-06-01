@@ -330,7 +330,7 @@ foreach ($pasien->result() as $row_pat) {
 							</div>
 						</div>
 
-						<div class="control-group">
+						<div class="control-group" style="display: none;">
 							<label class="control-label" for="select01">Company</label>
 							<div class="controls">
 								<select id="21" name="id_client" disabled>
@@ -348,7 +348,7 @@ foreach ($pasien->result() as $row_pat) {
 							</div>
 						</div>
 
-						<div class="control-group">
+						<div class="control-group" style="display: none;">
 							<label class="control-label" for="select01">Departement</label>
 							<div class="controls">
 								<select id="23" name="id_client_dept" disabled>
@@ -366,7 +366,7 @@ foreach ($pasien->result() as $row_pat) {
 							</div>
 						</div>
 
-						<div class="control-group">
+						<div class="control-group" style="display: none;">
 							<label class="control-label" for="select01">Group</label>
 							<div class="controls">
 								<select id="24" name="id_client_job" disabled>
@@ -385,7 +385,7 @@ foreach ($pasien->result() as $row_pat) {
 							</div>
 						</div>
 
-						<div class="control-group">
+						<div class="control-group" style="display: none;">
 							<label class="control-label" for="focusedInput">Company Address</label>
 							<div class="controls">
 								<textarea name="pat_address_misc" type="text" id="25" disabled autocomplete="off"> <?= $row_pat->pat_address_misc ?></textarea>
