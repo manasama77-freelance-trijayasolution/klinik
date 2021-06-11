@@ -419,6 +419,12 @@ $pat_name = $this->uri->segment(5);
 <script>
 	jQuery(document).ready(function() {
 		FormValidation.init();
+
+		$('#appointment_date').attr('min', $('#reg_date').val());
+
+		$('#reg_date').on('change', function() {
+			$('#appointment_date').attr('min', $('#reg_date').val());
+		});
 	});
 
 	$(function() {

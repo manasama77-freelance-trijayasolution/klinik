@@ -2443,12 +2443,15 @@ class Cashier extends CI_Controller
 				$arr4 = $this->m_cashier->report_patient_4($id_reg);
 
 				$type_payment = "Cash";
+				$card_no = '';
 
 				if ($arr4->num_rows() > 0) {
 					if ($arr4->row()->type_payment == '1') {
 						$type_payment = "Credit Card";
+						$card_no = $arr4->row()->card_no;
 					} elseif ($arr4->row()->type_payment == '5') {
 						$type_payment = "Debit Card";
+						$card_no = $arr4->row()->card_no;
 					}
 				}
 
@@ -2461,6 +2464,7 @@ class Cashier extends CI_Controller
 					'serv'         => $serv,
 					'doctor_name'  => $doctor_name,
 					'type_payment' => $type_payment,
+					'card_no'      => $card_no,
 					'sub_total'    => $sub_total,
 				];
 
@@ -2485,7 +2489,6 @@ class Cashier extends CI_Controller
 		$data['datereg2']			= $to;
 
 		$arr1 = $this->m_cashier->report_patient_1($from, $to);
-
 
 		$result = [];
 		$grand_total = 0;
@@ -2535,12 +2538,15 @@ class Cashier extends CI_Controller
 				$arr4 = $this->m_cashier->report_patient_4($id_reg);
 
 				$type_payment = "Cash";
+				$card_no = '';
 
 				if ($arr4->num_rows() > 0) {
 					if ($arr4->row()->type_payment == '1') {
 						$type_payment = "Credit Card";
+						$card_no = $arr4->row()->card_no;
 					} elseif ($arr4->row()->type_payment == '5') {
 						$type_payment = "Debit Card";
+						$card_no = $arr4->row()->card_no;
 					}
 				}
 
@@ -2553,6 +2559,7 @@ class Cashier extends CI_Controller
 					'serv'         => $serv,
 					'doctor_name'  => $doctor_name,
 					'type_payment' => $type_payment,
+					'card_no'      => $card_no,
 					'sub_total'    => $sub_total,
 				];
 

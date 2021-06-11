@@ -1342,6 +1342,7 @@ class M_cashier extends CI_Model
 	public function report_patient_3($id_reg)
 	{
 		$query = $this->db
+			->distinct()
 			->select(
 				[
 					'mst_services.serv_name',
@@ -1360,10 +1361,8 @@ class M_cashier extends CI_Model
 
 	public function report_patient_4($id_reg)
 	{
-		$id_reg = substr($id_reg, 1);
-
 		return $this->db
-			->select('trx_pat_payment_d.type_payment')
+			->select('trx_pat_payment_d.type_payment, trx_pat_payment_d.card_no')
 			->from('trx_pat_payment_h')
 			->join('trx_pat_payment_d', 'trx_pat_payment_d.id_payment_header = trx_pat_payment_h.id_payment', 'left')
 			->where('id_reg', $id_reg)

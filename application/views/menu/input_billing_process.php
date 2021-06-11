@@ -1387,7 +1387,7 @@ if ($split_trxbd == 3) {
 								?>
 								<div class="form-actions">
 									<button type="submit" class="btn btn-success" name="simpan" id="simpanharga" Onclick="payment();" value="save" /><b>Save Billing to Patient</b></button>
-									<button type="submit" class="btn btn-success" name="simpan" id="ubahharga" Onclick="payment();" value="update" disabled />Update</button>
+									<!-- <button type="submit" class="btn btn-success" name="simpan" id="ubahharga" Onclick="payment();" value="update" disabled />Update</button> -->
 								</div>
 				</form>
 

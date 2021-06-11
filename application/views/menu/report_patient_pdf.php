@@ -26,7 +26,7 @@
             <td style="vertical-align: top;"><?= $key['odo']; ?></td>
             <td style="vertical-align: top;"><?= $key['serv']; ?></td>
             <td style="vertical-align: top;"><?= $key['doctor_name']; ?></td>
-            <td style="vertical-align: top;"><?= $key['type_payment']; ?></td>
+            <td style="vertical-align: top;"><?= $key['type_payment']; ?><br><?= $key['card_no']; ?></td>
             <td style="vertical-align: top; text-align: right;"><?php echo number_format($key['sub_total'], 0); ?></td>
         </tr>
     <?php

@@ -272,18 +272,18 @@ class M_docter extends CI_Model
 
 	function get_dokter_order_list($id)
 	{
-		$query = $this->db->query("SELECT DISTINCT id_reg,pat_name,MAX(order_date) order_date, client_name FROM (
-		SELECT DISTINCT a.id_reg,pat_name,order_date,client_name FROM trx_registration a
+		$query = $this->db->query("SELECT DISTINCT id_reg,pat_name,MAX(order_date) order_date, client_name, create_date FROM (
+		SELECT DISTINCT a.id_reg,pat_name,order_date,client_name, a.create_date FROM trx_registration a
 		INNER JOIN pat_data b ON a.id_pat=b.id_Pat
 		INNER JOIN pat_order_h c ON a.id_reg=c.id_reg
 		LEFT JOIN mst_client d ON a.id_client=d.id_Client
 		UNION ALL
-		SELECT DISTINCT a.id_reg,pat_name,c.create_date,client_name FROM trx_registration a
+		SELECT DISTINCT a.id_reg,pat_name,c.create_date,client_name, a.create_date FROM trx_registration a
 		INNER JOIN pat_data b ON a.id_pat=b.id_Pat
 		INNER JOIN pat_prescription_h c ON a.id_reg=c.id_reg
 		LEFT JOIN mst_client d ON a.id_client=d.id_Client 
 		)aa
-		GROUP BY id_reg,pat_name,client_name ORDER BY id_reg DESC");
+		GROUP BY id_reg,pat_name,client_name ORDER BY create_date DESC");
 		return $query;
 	}
 
