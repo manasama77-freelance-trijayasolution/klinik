@@ -574,7 +574,7 @@ class M_docter extends CI_Model
 
 	public function insert_odontogram($data_odontogram)
 	{
-		return $this->db->insert_batch('mst_odo', $data_odontogram);
+		return $this->db->insert('mst_odo', $data_odontogram);
 	}
 
 	public function update_registration($data, $where)
@@ -588,5 +588,10 @@ class M_docter extends CI_Model
 			->from('mst_odo')
 			->where('id_reg', $id_reg)
 			->get();
+	}
+
+	public function id_dr_on_registration($id_reg)
+	{
+		return $this->db->where('id_reg', $id_reg)->get('trx_registration', 1);
 	}
 }

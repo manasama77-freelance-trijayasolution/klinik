@@ -149,8 +149,6 @@ class Registration extends CI_Controller
 			$id_dr            = $this->input->post('id_dr');
 			$current_datetime = date("Y-m-d H:i:s");
 
-
-
 			$data_reg 			= array(
 				'id_reg'           => $id_reg,
 				'reg_date'         => $reg_date,
@@ -190,6 +188,7 @@ class Registration extends CI_Controller
 			redirect('login', 'refresh');
 		}
 	}
+
 	function save_reg()
 	{
 		if ($this->session->userdata('logged_in')) {

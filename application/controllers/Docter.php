@@ -1357,42 +1357,43 @@ class Docter extends CI_Controller
 	{
 		$code              = 500;
 		$msg               = "Failed connect to Databases, please contact Web Admin";
-		$current_date      = date('Y-m-d');
 		$current_date_time = date('Y-m-d H:i:s');
 
 		if ($this->session->userdata('logged_in')) {
-			$this->db->trans_start();
+			$this->db->trans_begin();
 			$session_data    = $this->session->userdata('logged_in');
 			$user_id         = $session_data['id'];
 
 			$id_registration = $this->input->post('id_registration');
 			$id_patient      = $this->input->post('id_patient');
 
+			$arr_regis = $this->m_docter->id_dr_on_registration($id_registration);
+			$id_dr = $arr_regis->row()->id_dr;
+
 			// part odontogram start
 			$array_odontogram = $this->generate_array_odontogram();
-			$data_odontogram  = [];
 
-			for ($a = 0; $a < count($array_odontogram); $a++) {
-				$post = $this->input->post($a);
-				$desc = $this->input->post('desc' . $a);
+			foreach ($array_odontogram as $key) {
+				$post = $this->input->post($key);
+				$desc = $this->input->post('desc' . $key);
 
 				if ($post == "on") {
 
 					$nested = [
 						'id_reg'     => $id_registration,
 						'id_patient' => $id_patient,
-						'odo_value'  => $a,
+						'odo_value'  => $key,
 						'odo_desc'   => $desc,
 					];
-					array_push($data_odontogram, $nested);
-				}
-			}
 
-			$exec_odontogram = $this->m_docter->insert_odontogram($data_odontogram);
-			if (!$exec_odontogram) {
-				$this->db->trans_rollback();
-				echo json_encode(['code' => $code, 'msg' => '$exec_odontogram']);
-				exit;
+					$exec_odontogram = $this->m_docter->insert_odontogram($nested);
+
+					if ($exec_odontogram == 0) {
+						$this->db->trans_rollback();
+						echo json_encode(['code' => $code, 'msg' => '$exec_odontogram']);
+						exit;
+					}
+				}
 			}
 			// part odontogram end
 
@@ -1404,6 +1405,7 @@ class Docter extends CI_Controller
 				exit;
 			}
 
+			$seq = 1;
 			foreach ($arr_selected_services->result() as $key) {
 				$id_service = $key->id_service;
 
@@ -1414,6 +1416,7 @@ class Docter extends CI_Controller
 					'order_date'   => $current_date_time,
 					'order_status' => 1,
 					'user_id'      => $user_id,
+					'is_complete'  => 0,
 				);
 
 				$exec_data_order_lab_h = $this->m_docter->order_lab_h($data_order_lab_h);
@@ -1428,9 +1431,9 @@ class Docter extends CI_Controller
 				$data_pat_order_d = [
 					'id_order_header' => $id_order_header,
 					'id_service'      => $id_service,
-					'seq_no'          => '1',
+					'seq_no'          => $seq++,
 					'service_qty'     => '1',
-					'id_dr'           => $user_id,
+					'id_dr'           => $id_dr,
 					'acct_code'       => '1',
 				];
 
@@ -1466,11 +1469,10 @@ class Docter extends CI_Controller
 				echo json_encode(['code' => $code, 'msg' => '$exec_trx_registration']);
 				exit;
 			}
-			//adam
 
 			$code = 200;
 			$msg = "Process Create Order Complete";
-			$this->db->trans_complete();
+			$this->db->trans_commit();
 		}
 
 		echo json_encode([

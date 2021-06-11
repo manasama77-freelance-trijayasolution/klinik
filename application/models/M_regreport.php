@@ -366,7 +366,7 @@ From
 				'trx_registration.id',
 				'trx_registration.id_reg',
 				'trx_registration.id_pat',
-				'trx_registration.create_date as reg_date',
+				'trx_registration.reg_date',
 				'pat_data.pat_name',
 				'mst_title.title_desc',
 				'pat_data.pat_dob',

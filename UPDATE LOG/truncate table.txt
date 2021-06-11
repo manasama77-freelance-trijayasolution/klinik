@@ -1,0 +1,14 @@
+expense
+mst_doctor
+mst_odo
+pat_data
+pat_order_d
+pat_order_h
+trx_bd
+trx_bh
+trx_billing
+trx_pat_invoice
+trx_pat_payment_d
+trx_pat_payment_h
+trx_registration
+usr_log

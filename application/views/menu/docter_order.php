@@ -1,4 +1,5 @@
 <link href="<?= base_url(); ?>design/assets/DT_bootstrap.css" rel="stylesheet" media="screen">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
 	.modal-large {
 		width: 800px;
@@ -562,7 +563,7 @@
 
 								<div class="span3" style="text-align: center; display: none;" id="desc_74">
 									<label>Gigi 74</label>
-									<input type="text" placeholder="Type something…" name="desc72" id="desc72">
+									<input type="text" placeholder="Type something…" name="desc74" id="desc74">
 								</div>
 
 								<div class="span3" style="text-align: center; display: none;" id="desc_75">
@@ -670,8 +671,8 @@
 						<div class="control-group">
 							<label class="control-label" for="services_name">Services Name</label>
 							<div class="controls">
-								<select class="input-xxlarge" id="services_name" name="services_name">
-									<option value="">Pick a Services</option>
+								<select class="input-xxlarge" id="services_name" name="services_name" data-placeholder="Pick a Services">
+									<option value=""></option>
 									<?php
 									if ($arr_services->num_rows() > 0) {
 										foreach ($arr_services->result() as $key) {
@@ -749,10 +750,13 @@
 <script src="<?= base_url(); ?>design/assets/scripts.js"></script>
 <script src="<?= base_url(); ?>design/assets/DT_bootstrap.js"></script>
 <script src="<?= base_url(); ?>public/vendor/blockui/jquery.blockUI.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
 	$(document).ready(function() {
+		$('#services_name').select2();
 
 		$('#button_registration_list').on('click', function(e) {
 			e.preventDefault();
@@ -773,15 +777,12 @@
 			let checkdontogram = checkOdontogram();
 
 			if (checkdontogram == false) {
-				swal("Oops!", "Please select at least one Odontogram", "warning", {
-					buttons: false,
-					timer: 3000,
-				});
+				Swal.fire("Oops!", "Please select at least one Odontogram", "warning");
 			} else {
 
 				let countService = $('#count_service').val();
 				if (countService == 0) {
-					swal("Oops!", "Please select at least one Service", "warning", {
+					Swal.fire("Oops!", "Please select at least one Service", "warning", {
 						buttons: false,
 						timer: 3000,
 					});
@@ -798,19 +799,28 @@
 						$.unblockUI();
 					}).fail(function(e) {
 						console.log(e);
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops...',
+							html: e.responseText
+						});
 					}).done(function(e) {
 						console.log(e);
 						if (e.code == 500 || e.code == 404) {
-							swal("Oops!", e.msg, "warning", {
-								buttons: false,
-								timer: 3000,
+							Swal.fire({
+								icon: 'warning',
+								title: 'Oops...',
+								html: e.msg
 							});
 						} else if (e.code == 200) {
-							swal("Success!", e.msg, "success", {
+							Swal.fire({
+								icon: 'success',
+								title: 'Success...',
+								html: e.msg,
 								buttons: false,
 								timer: 3000,
 							}).then((res) => {
-								location.reload();
+								window.location.reload();
 							});
 						}
 					});
@@ -857,17 +867,18 @@
 			$.unblockUI();
 		}).fail(function(e) {
 			console.log(e);
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				html: e.responseText
+			});
 		}).done(function(e) {
 			console.log(e);
 			if (e.code == 500) {
-				swal({
+				Swal.fire({
+					icon: "error",
 					title: "Oops!",
 					text: "Failed to get Registration Data. Contact Web Developer",
-					icon: "warning",
-					buttons: false,
-					timer: 3000,
-				}).then((res) => {
-					//
 				});
 			} else if (e.code == 200) {
 				let htmlnya = ``;
@@ -916,25 +927,25 @@
 	function checkFormRegistrationList() {
 		let stat = true;
 		if ($('#id_registration').val().length == 0) {
-			swal("Oops!", "ID Registration Empty", "info", {
+			Swal.fire("Oops!", "ID Registration Empty", "info", {
 				buttons: false,
 				timer: 3000,
 			});
 			stat = false;
 		} else if ($('#patient_name').val().length == 0) {
-			swal("Oops!", "Patient Name Empty", "info", {
+			Swal.fire("Oops!", "Patient Name Empty", "info", {
 				buttons: false,
 				timer: 3000,
 			});
 			stat = false;
 		} else if ($('#charge_rule').val().length == 0) {
-			swal("Oops!", "Charge Rule Empty", "info", {
+			Swal.fire("Oops!", "Charge Rule Empty", "info", {
 				buttons: false,
 				timer: 3000,
 			});
 			stat = false;
 		} else if ($('#age').val().length == 0) {
-			swal("Oops!", "Age Empty", "info", {
+			Swal.fire("Oops!", "Age Empty", "info", {
 				buttons: false,
 				timer: 3000,
 			});
@@ -967,7 +978,7 @@
 		let id_service = $('#services_name').val();
 
 		if (id_service == "") {
-			swal("Oops!", "Please Choose One Service to be Add", "info", {
+			Swal.fire("Oops!", "Please Choose One Service to be Add", "info", {
 				buttons: false,
 				timer: 3000,
 			});
@@ -990,17 +1001,17 @@
 				console.log(e);
 			}).done(function(e) {
 				if (e.code == 500) {
-					swal("Oops!", e.msg, "info", {
+					Swal.fire("Oops!", e.msg, "info", {
 						buttons: false,
 						timer: 3000,
 					});
 				} else if (e.code == 200) {
-					swal("Success!", e.msg, "success", {
+					Swal.fire("Success!", e.msg, "success", {
 						buttons: false,
 						timer: 3000,
 					}).then((res) => {
 						let count = $('#count_service').val();
-						let newCount = parseInt(count + 1);
+						let newCount = parseInt(count) + 1;
 						$('#count_service').val(newCount);
 						updateTableListService();
 					});
@@ -1027,7 +1038,7 @@
 			console.log(e);
 		}).done(function(e) {
 			if (e.code == 500) {
-				swal("Oops!", "Failed to get list services, please contact Web Admin", "error", {
+				Swal.fire("Oops!", "Failed to get list services, please contact Web Admin", "error", {
 					buttons: false,
 					timer: 3000,
 				});
@@ -1085,12 +1096,12 @@
 			console.log(e);
 		}).done(function(e) {
 			if (e.code == 404 || e.code == 500) {
-				swal("Oops!", e.msg, "info", {
+				Swal.fire("Oops!", e.msg, "info", {
 					buttons: false,
 					timer: 3000,
 				});
 			} else if (e.code == 200) {
-				swal("Success!", e.msg, "success", {
+				Swal.fire("Success!", e.msg, "success", {
 					buttons: false,
 					timer: 3000,
 				}).then((res) => {

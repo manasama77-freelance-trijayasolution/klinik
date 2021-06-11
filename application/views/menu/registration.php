@@ -71,16 +71,18 @@ $pat_name = $this->uri->segment(5);
 	</div>
 
 	<div class="row-fluid" id="section_registration_patient">
-		<div class="block">
-			<div class="navbar navbar-inner block-header">
-				<div class="muted pull-left"><b>Registration Patient</b></div>
-				<div class="muted pull-right" id="txt" style="font-weight: bold;"></div>
-			</div>
+		<form action="<?= site_url(); ?>registration/save_reg2" method="post" class="form-horizontal" onSubmit="if(!confirm('Is the form filled out correctly ?')){return false;}" id="form_sample_1" name="quesioner_mcu">
 
-			<div class="block-content collapse in">
-				<div class="span12">
-					<div style="overflow-y: auto; height:auto;">
-						<form action="<?= site_url(); ?>registration/save_reg2" method="post" class="form-horizontal" onSubmit="if(!confirm('Is the form filled out correctly ?')){return false;}" id="form_sample_1" name="quesioner_mcu">
+			<div class="block">
+				<div class="navbar navbar-inner block-header">
+					<div class="muted pull-left"><b>Registration Patient</b></div>
+					<div class="muted pull-right" id="txt" style="font-weight: bold;"></div>
+				</div>
+
+				<div class="block-content collapse in">
+					<div class="span12">
+						<div style="overflow-y: auto; height:auto;">
+
 							<fieldset>
 								<div class="alert alert-error hide" style="width: 550px;">
 									<button class="close" data-dismiss="alert">&times;</button>
@@ -165,20 +167,21 @@ $pat_name = $this->uri->segment(5);
 								</div>
 							</fieldset>
 							</br></br></br>
+						</div>
+					</div>
+				</div>
+				<div class="form-actions">
+					<div style="float:left;">
+						<button type="submit" class="btn btn-success" id="btn_submit_registration"><b>Submit</b></button>
+					</div>
+					<div style="float:right;">
+						<a href="<?= site_url(); ?>registration/reg_patien" class="btn btn-danger"><b>Reset</b></a>
 					</div>
 				</div>
 			</div>
-			<div class="form-actions">
-				<div style="float:left;">
-					<button type="submit" class="btn btn-success" id="btn_submit_registration"><b>Submit</b></button>
-				</div>
-				<div style="float:right;">
-					<a href="<?= site_url(); ?>registration/reg_patien" class="btn btn-danger"><b>Reset</b></a>
-				</div>
-			</div>
-		</div>
+
 		</form>
-		<!-- /block -->
+
 	</div>
 
 	<div class="row-fluid" id="section_add_new_patient" style="display: none;">
