@@ -10,8 +10,8 @@
 
 <body onload="window.print();">
 	<!-- <body onload="window.print();window.close();"> -->
-	<div style="font-size:6px; font-family:'Verdana'; width:50mm;">
-		<img src="<?= base_url('public/img/LOGO.png'); ?>" alt="LOGO" style="width: 50mm; text-align: center;">
+	<div style="font-size:8px; font-family:'Verdana'; width:58mm; font-weight: bolder;">
+		<img src="<?= base_url('public/img/LOGO.png'); ?>" alt="LOGO" style="width: 58mm; text-align: center;">
 		<!-- <label style="font-size:8px; display:block; width:x; height:y; text-align:center;"><strong>Klinik drg. Magista Lutfia</strong></label>
 		<p style="text-align:center;"><strong>Jl. Merpati Blok D18 No.5, RT.007/RW.009, Gebang Raya, Periuk, Tangerang City, Banten 15132</strong></p> -->
 		<br>
