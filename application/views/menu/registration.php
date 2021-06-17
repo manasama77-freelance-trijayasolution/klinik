@@ -147,10 +147,10 @@ $pat_name = $this->uri->segment(5);
 										<label class="control-label" for="appointment_date"><b>Appointment Date</b> <span class="required">*</span></label>
 										<div class="controls">
 											<input type="date" name="appointment_date" class="input-large" id="appointment_date" required>
-											<input type="time" name="appointment_time" class="input-large" id="appointment_time" min="09:00" max="18:00" required>
+											<input type="time" name="appointment_time" class="input-large" id="appointment_time" min="16:00" max="20:00" required>
 											<span class="validity"></span>
 											<p class="fallbackLabel">
-												Choose an appointment time (opening hours 09:00 AM to 06:00 PM)
+												Choose an appointment time (opening hours 04:00 PM to 08:00 PM)
 												<span class="btn-mini tooltip-right" data-original-title="Appointment Date adalah tanggal janji pasien bertemu dengan dokter, namun bisa disesuaikan tanggalnya."><i class="icon-question-sign"></i></span>
 											</p>
 										</div>
